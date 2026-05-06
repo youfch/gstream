@@ -1,0 +1,260 @@
+[gd_scene format=3 uid="uid://2f8n5jt1k6ia"]
+
+[ext_resource type="Script" uid="uid://kkcklr6kxy0q" path="res://addons/gstream/Nodes/StreamServer.cs" id="1_streamserver"]
+[ext_resource type="Script" uid="uid://bx7k3m9qw2r4p" path="res://script/bidirectional.gd" id="1_bidir"]
+[ext_resource type="AudioStream" uid="uid://d1bvndouj3t7g" path="res://audio/Calm Inspiring Piano Logo.mp3" id="3_audio"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.15, 0.2, 0.35, 1)
+sky_horizon_color = Color(0.35, 0.4, 0.55, 1)
+ground_bottom_color = Color(0.12, 0.1, 0.08, 1)
+ground_horizon_color = Color(0.25, 0.22, 0.18, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+ambient_light_source = 3
+ambient_light_color = Color(0.3, 0.3, 0.4, 1)
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(30, 30)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ground"]
+albedo_color = Color(0.18, 0.2, 0.24, 1)
+roughness = 0.85
+
+[sub_resource type="BoxShape3D" id="BoxShape_ground"]
+size = Vector3(30, 0.1, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cube"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cube"]
+albedo_color = Color(0.35, 0.55, 0.85, 1)
+metallic = 0.1
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pillar"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 3.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pillar"]
+albedo_color = Color(0.55, 0.5, 0.45, 1)
+roughness = 0.7
+
+[sub_resource type="SphereMesh" id="SphereMesh_orb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orb"]
+albedo_color = Color(0.9, 0.4, 0.3, 1)
+metallic = 0.6
+roughness = 0.2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_red"]
+bg_color = Color(0.85, 0.2, 0.2, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_green"]
+bg_color = Color(0.2, 0.75, 0.3, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_blue"]
+bg_color = Color(0.2, 0.4, 0.85, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_reset"]
+bg_color = Color(0.4, 0.4, 0.4, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_audio"]
+bg_color = Color(0.6, 0.3, 0.75, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Bidirectional" type="Node3D" unique_id=2000000001]
+script = ExtResource("1_bidir")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2000000002]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2000000003]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 8, 0)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 20.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2000000004]
+transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.5, 0, -0.5, 0.86602545, 0, 6, 10)
+
+[node name="StreamServer" type="Node" parent="." unique_id=2000000005]
+script = ExtResource("1_streamserver")
+BidirectionalMode = true
+BitrateKbps = 40000
+MaxRateMultiplier = 1.5
+Codec = 20
+RemoteVideoDisplay = NodePath("../UI/RemoteVideo")
+metadata/_custom_type_script = "uid://kkcklr6kxy0q"
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=2000000006]
+mesh = SubResource("PlaneMesh_ground")
+surface_material_override/0 = SubResource("StandardMaterial3D_ground")
+
+[node name="GroundCollision" type="StaticBody3D" parent="Ground" unique_id=2000000007]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/GroundCollision" unique_id=2000000008]
+shape = SubResource("BoxShape_ground")
+
+[node name="Cube" type="MeshInstance3D" parent="." unique_id=2000000009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_cube")
+surface_material_override/0 = SubResource("StandardMaterial3D_cube")
+
+[node name="PillarFL" type="MeshInstance3D" parent="." unique_id=2000000010]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, -3)
+mesh = SubResource("CylinderMesh_pillar")
+surface_material_override/0 = SubResource("StandardMaterial3D_pillar")
+
+[node name="PillarFR" type="MeshInstance3D" parent="." unique_id=2000000011]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, -3)
+mesh = SubResource("CylinderMesh_pillar")
+surface_material_override/0 = SubResource("StandardMaterial3D_pillar")
+
+[node name="PillarBL" type="MeshInstance3D" parent="." unique_id=2000000012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, 3)
+mesh = SubResource("CylinderMesh_pillar")
+surface_material_override/0 = SubResource("StandardMaterial3D_pillar")
+
+[node name="PillarBR" type="MeshInstance3D" parent="." unique_id=2000000013]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, 3)
+mesh = SubResource("CylinderMesh_pillar")
+surface_material_override/0 = SubResource("StandardMaterial3D_pillar")
+
+[node name="Orb" type="MeshInstance3D" parent="." unique_id=2000000014]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 2.5, 0)
+mesh = SubResource("SphereMesh_orb")
+surface_material_override/0 = SubResource("StandardMaterial3D_orb")
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=2000000015]
+
+[node name="Panel" type="PanelContainer" parent="UI" unique_id=2000000016]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 340.0
+offset_bottom = 380.0
+
+[node name="VBox" type="VBoxContainer" parent="UI/Panel" unique_id=2000000017]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/Panel/VBox" unique_id=2000000018]
+layout_mode = 2
+text = "gStream Bidirectional Demo"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/Panel/VBox" unique_id=2000000019]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="UI/Panel/VBox" unique_id=2000000020]
+layout_mode = 2
+text = "状态: 等待连接..."
+
+[node name="ClickCountLabel" type="Label" parent="UI/Panel/VBox" unique_id=2000000021]
+layout_mode = 2
+text = "鼠标点击: 0"
+
+[node name="TouchCountLabel" type="Label" parent="UI/Panel/VBox" unique_id=2000000022]
+layout_mode = 2
+text = "触摸点击: 0"
+
+[node name="KeyLogLabel" type="Label" parent="UI/Panel/VBox" unique_id=2000000023]
+layout_mode = 2
+text = "键盘: "
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="UI/Panel/VBox" unique_id=2000000024]
+layout_mode = 2
+
+[node name="BtnLabel" type="Label" parent="UI/Panel/VBox" unique_id=2000000025]
+layout_mode = 2
+text = "旋转方块 (鼠标/触摸点击):"
+horizontal_alignment = 1
+
+[node name="BtnHBox" type="HBoxContainer" parent="UI/Panel/VBox" unique_id=2000000026]
+layout_mode = 2
+
+[node name="RedBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=2000000027]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_red")
+text = "Y轴+45°"
+
+[node name="GreenBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=2000000028]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_green")
+text = "X轴+45°"
+
+[node name="BlueBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=2000000029]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_blue")
+text = "Z轴+45°"
+
+[node name="ResetBtn" type="Button" parent="UI/Panel/VBox" unique_id=2000000030]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_reset")
+text = "重置"
+
+[node name="AudioBtn" type="Button" parent="UI/Panel/VBox" unique_id=2000000031]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_audio")
+text = "播放音频"
+
+[node name="RemoteVideoLabel" type="Label" parent="UI" unique_id=2000000034]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_right = -16.0
+offset_top = 0.0
+offset_bottom = 18.0
+text = "远端视频 (浏览器摄像头)"
+horizontal_alignment = 1
+
+[node name="RemoteVideo" type="TextureRect" parent="UI" unique_id=2000000035]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -400.0
+offset_top = 22.0
+offset_right = -16.0
+offset_bottom = 306.0
+expand_mode = 1
+stretch_mode = 6
+
+[node name="ColorRect" type="ColorRect" parent="UI" unique_id=2000000032]
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=2000000033]
+stream = ExtResource("3_audio")
+
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/RedBtn" to="." method="_on_red_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/GreenBtn" to="." method="_on_green_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/BlueBtn" to="." method="_on_blue_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/ResetBtn" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/AudioBtn" to="." method="_on_audio_pressed"]

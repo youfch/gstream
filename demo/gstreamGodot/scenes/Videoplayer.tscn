@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://bvp7x2k3m8hqn"]
+
+[ext_resource type="Script" uid="uid://kkcklr6kxy0q" path="res://addons/gstream/Nodes/StreamServer.cs" id="1_streamserver"]
+[ext_resource type="Script" uid="uid://bvpy4k7n3qwhm" path="res://script/videoplayer.gd" id="1_vpyr"]
+[ext_resource type="AudioStream" uid="uid://d1bvndouj3t7g" path="res://audio/Calm Inspiring Piano Logo.mp3" id="3_vpyr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
+sky_top_color = Color(0.15, 0.2, 0.35, 1)
+sky_horizon_color = Color(0.35, 0.4, 0.55, 1)
+ground_bottom_color = Color(0.12, 0.1, 0.08, 1)
+ground_horizon_color = Color(0.25, 0.22, 0.18, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+ambient_light_source = 3
+ambient_light_color = Color(0.3, 0.3, 0.4, 1)
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 0.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_play"]
+bg_color = Color(0.2, 0.75, 0.3, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause"]
+bg_color = Color(0.85, 0.65, 0.2, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stop"]
+bg_color = Color(0.85, 0.2, 0.2, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_reset"]
+bg_color = Color(0.4, 0.4, 0.4, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_audio"]
+bg_color = Color(0.6, 0.3, 0.75, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Videoplayer" type="Node3D" unique_id=557084925]
+script = ExtResource("1_vpyr")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=6255439996]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=6770101870]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 8, 0)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 20.0
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=590108513]
+transform = Transform3D(1, 0, 0, 0, 0.86602545, 0.5, 0, -0.5, 0.86602545, 0, 6, 10)
+
+[node name="StreamServer" type="Node" parent="." unique_id=581738258]
+script = ExtResource("1_streamserver")
+BitrateKbps = 40000
+MaxRateMultiplier = 1.5
+Codec = 20
+DataChannelLabel = "data"
+InputProtocol = "videoplayer"
+metadata/_custom_type_script = "uid://kkcklr6kxy0q"
+
+[node name="VideoPlayer" type="VideoStreamPlayer" parent="." unique_id=7402268130]
+offset_left = -160.0
+offset_top = -90.0
+offset_right = 160.0
+offset_bottom = 90.0
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=862130540]
+
+[node name="Panel" type="PanelContainer" parent="UI" unique_id=9011349270]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 340.0
+offset_bottom = 420.0
+
+[node name="VBox" type="VBoxContainer" parent="UI/Panel" unique_id=9376891141]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UI/Panel/VBox" unique_id=982295088]
+layout_mode = 2
+text = "gStream Videoplayer Demo"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/Panel/VBox" unique_id=1022810944]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="UI/Panel/VBox" unique_id=1030139975]
+layout_mode = 2
+text = "状态: 等待连接..."
+
+[node name="VideoStatusLabel" type="Label" parent="UI/Panel/VBox" unique_id=1035160498]
+layout_mode = 2
+text = "视频: 未加载"
+
+[node name="ClickCountLabel" type="Label" parent="UI/Panel/VBox" unique_id=1115604978]
+layout_mode = 2
+text = "鼠标点击: 0"
+
+[node name="TouchCountLabel" type="Label" parent="UI/Panel/VBox" unique_id=1135583255]
+layout_mode = 2
+text = "触摸点击: 0"
+
+[node name="KeyLogLabel" type="Label" parent="UI/Panel/VBox" unique_id=1248513007]
+layout_mode = 2
+text = "键盘: "
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="UI/Panel/VBox" unique_id=156389647]
+layout_mode = 2
+
+[node name="BtnLabel" type="Label" parent="UI/Panel/VBox" unique_id=161264513]
+layout_mode = 2
+text = "视频控制:"
+horizontal_alignment = 1
+
+[node name="BtnHBox" type="HBoxContainer" parent="UI/Panel/VBox" unique_id=173279930]
+layout_mode = 2
+
+[node name="PlayBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=177043331]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_play")
+text = "播放视频"
+
+[node name="PauseBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=186167252]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_pause")
+text = "暂停"
+
+[node name="StopBtn" type="Button" parent="UI/Panel/VBox/BtnHBox" unique_id=195158818]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_stop")
+text = "停止"
+
+[node name="ResetBtn" type="Button" parent="UI/Panel/VBox" unique_id=168870170]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_reset")
+text = "重置"
+
+[node name="AudioBtn" type="Button" parent="UI/Panel/VBox" unique_id=190000003]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_audio")
+text = "播放音频"
+
+[node name="ColorRect" type="ColorRect" parent="UI" unique_id=1137247268]
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="AudioPlayer" type="AudioStreamPlayer" parent="." unique_id=190000004]
+stream = ExtResource("3_vpyr")
+
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/PlayBtn" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/PauseBtn" to="." method="_on_pause_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/BtnHBox/StopBtn" to="." method="_on_stop_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/ResetBtn" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="UI/Panel/VBox/AudioBtn" to="." method="_on_audio_pressed"]

@@ -1,0 +1,19 @@
+# Visual Studio
+.vs/
+
+# Unreal Engine
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+
+# Build artifacts
+*.pdb
+*.lib
+*.exp
+
+# Third-party binaries (FFmpeg, gStream.Core native DLLs)
+Plugins/*/ThirdParty/**/*.dll
+Plugins/*/ThirdParty/**/*.lib
+Plugins/*/ThirdParty/**/*.exp
+Plugins/*/ThirdParty/**/*.pdb

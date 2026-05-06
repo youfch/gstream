@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- lang is dynamically set by i18n.js -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0f'/%3E%3Cpolygon points='12,6 26,16 12,26' fill='%2300d4ff'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
+  <title>gStream — WebRTC Streaming</title>
+  <style>
+    /* Landing page specific styles */
+    .gs-hero {
+      text-align: center;
+      padding: 3rem 0 2rem;
+      animation: gsFadeIn 0.8s ease both;
+      position: relative;
+    }
+
+    .gs-hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      border: none;
+      margin-bottom: 0.25rem;
+      padding-bottom: 0;
+      background: linear-gradient(135deg, #00d4ff 0%, #ffffff 50%, #ff6b35 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.03em;
+    }
+
+    .gs-hero-subtitle {
+      font-family: var(--gs-font-body);
+      font-size: 1rem;
+      color: var(--gs-text-muted);
+      font-weight: 300;
+      margin: 0;
+    }
+
+    .gs-logo-mark {
+      display: inline-block;
+      width: 56px;
+      height: 56px;
+      margin-bottom: 1rem;
+      animation: gsPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes gsPulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* Card grid */
+    .gs-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .gs-card {
+      background: var(--gs-bg-card);
+      border: 1px solid var(--gs-border);
+      border-radius: var(--gs-radius-lg);
+      padding: 1.5rem;
+      text-decoration: none;
+      display: block;
+      transition: all var(--gs-transition-slow);
+      position: relative;
+      overflow: hidden;
+      animation: gsFadeIn 0.6s ease both;
+    }
+
+    .gs-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gs-accent), transparent);
+      opacity: 0;
+      transition: opacity var(--gs-transition-slow);
+    }
+
+    .gs-card:hover {
+      border-color: var(--gs-border-accent);
+      transform: translateY(-2px);
+      box-shadow: var(--gs-shadow-accent);
+      text-decoration: none;
+    }
+
+    .gs-card:hover::before {
+      opacity: 1;
+    }
+
+    .gs-card-icon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 1rem;
+      border-radius: var(--gs-radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gs-accent-dim);
+    }
+
+    .gs-card-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gs-accent);
+    }
+
+    .gs-card h2 {
+      font-family: var(--gs-font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gs-text);
+      margin: 0 0 0.5rem;
+    }
+
+    .gs-card p {
+      font-size: 0.85rem;
+      color: var(--gs-text-muted);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Config section */
+    .gs-config-panel {
+      background: var(--gs-bg-card);
+      border: 1px solid var(--gs-border);
+      border-radius: var(--gs-radius-lg);
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(var(--gs-glass-blur));
+      animation: gsFadeIn 0.6s ease 0.2s both;
+    }
+
+    .gs-config-panel h2 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .gs-config-panel h2 svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--gs-accent);
+    }
+
+    #startup {
+      list-style: none;
+      padding: 0;
+    }
+
+    #startup li {
+      padding: 0.35rem 0;
+      font-size: 0.9rem;
+      color: var(--gs-text-muted);
+    }
+
+    #startup li b {
+      color: var(--gs-accent);
+      font-weight: 600;
+    }
+
+    /* ICE section override */
+    section#iceServers h2 {
+      margin-bottom: 1rem;
+    }
+
+    .gs-ice-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .gs-ice-row label {
+      min-width: 130px;
+      color: var(--gs-text-muted);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .gs-ice-row input {
+      flex: 1;
+    }
+
+    .gs-ice-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Footer */
+    .gs-footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      color: var(--gs-text-dim);
+      font-size: 0.75rem;
+      border-top: 1px solid var(--gs-border);
+      margin-top: 3rem;
+    }
+
+    /* Stagger animation for cards */
+    .gs-card:nth-child(1) { animation-delay: 0.1s; }
+    .gs-card:nth-child(2) { animation-delay: 0.2s; }
+    .gs-card:nth-child(3) { animation-delay: 0.3s; }
+    .gs-card:nth-child(4) { animation-delay: 0.4s; }
+
+    @media screen and (max-width: 768px) {
+      .gs-hero h1 {
+        font-size: 2rem;
+      }
+
+      .gs-card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gs-ice-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .gs-ice-row label {
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+    <!-- Hero -->
+    <div class="gs-hero">
+      <div id="langSwitcher" style="position:absolute;top:1rem;right:1.5rem;"></div>
+      <div class="gs-logo-mark">
+        <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="52" height="52" rx="12" stroke="#00d4ff" stroke-width="2" fill="rgba(0,212,255,0.05)"/>
+          <polygon points="22,16 42,28 22,40" fill="#00d4ff" opacity="0.9"/>
+          <circle cx="18" cy="14" r="3" fill="#ff6b35" opacity="0.8"/>
+          <circle cx="40" cy="42" r="2" fill="#ff6b35" opacity="0.6"/>
+        </svg>
+      </div>
+      <h1>gStream</h1>
+      <p class="gs-hero-subtitle" data-i18n="hero.subtitle">Real-time WebRTC video streaming — low latency, high quality</p>
+    </div>
+
+    <!-- Server Configuration -->
+    <div class="gs-config-panel">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span data-i18n="config.title">Server Configuration</span>
+      </h2>
+      <ul id="startup"></ul>
+    </div>
+
+    <!-- ICE Servers -->
+    <section id="iceServers">
+      <h2>
+        <svg style="width:18px;height:18px;stroke:var(--gs-accent);vertical-align:middle;margin-right:6px" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span data-i18n="ice.title">ICE Servers</span>
+      </h2>
+      <select id="servers" size="4"></select>
+      <div class="gs-ice-row">
+        <label for="url" data-i18n="ice.url">STUN or TURN URI:</label>
+        <input id="url">
+      </div>
+      <div class="gs-ice-row">
+        <label for="username" data-i18n="ice.username">TURN username:</label>
+        <input id="username">
+      </div>
+      <div class="gs-ice-row">
+        <label for="password" data-i18n="ice.password">TURN password:</label>
+        <input id="password">
+      </div>
+      <div class="gs-ice-actions">
+        <button id="add" data-i18n="ice.add">Add Server</button>
+        <button id="remove" data-i18n="ice.remove">Remove Server</button>
+        <button id="reset" data-i18n="ice.reset">Reset to defaults</button>
+      </div>
+    </section>
+
+    <!-- Sample Pages -->
+    <section>
+      <h2 style="margin-bottom:0.5rem" data-i18n="samples.title">Streaming Samples</h2>
+      <p style="margin-bottom:0" data-i18n="samples.subtitle">Select a sample page below to start streaming.</p>
+      <div class="gs-card-grid">
+        <a class="gs-card" href="receiver/index.html">
+          <div class="gs-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </div>
+          <h2 data-i18n="card.receiver.title">Receiver</h2>
+          <p data-i18n="card.receiver.desc">Receive real-time video and audio from the game engine with codec selection and mouse lock support.</p>
+        </a>
+
+        <a class="gs-card" href="bidirectional/index.html">
+          <div class="gs-card-icon" style="background:rgba(255,107,53,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#ff6b35">
+              <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+            </svg>
+          </div>
+          <h2 data-i18n="card.bidirectional.title">Bidirectional</h2>
+          <p data-i18n="card.bidirectional.desc">Send local camera video and receive remote video simultaneously. Requires Private mode.</p>
+        </a>
+
+        <a class="gs-card" href="multiplay/index.html">
+          <div class="gs-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h2 data-i18n="card.multiplay.title">Multiplay</h2>
+          <p data-i18n="card.multiplay.desc">Multiplayer streaming with input data channel support. Connect as a guest to a shared session.</p>
+        </a>
+
+        <a class="gs-card" href="videoplayer/index.html">
+          <div class="gs-card-icon" style="background:rgba(255,107,53,0.12)">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="stroke:#ff6b35">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </div>
+          <h2 data-i18n="card.videoplayer.title">VideoPlayer</h2>
+          <p data-i18n="card.videoplayer.desc">Receive a camera stream with interactive controls. Requires Public mode.</p>
+        </a>
+      </div>
+    </section>
+
+    <div class="gs-footer" data-i18n="footer">
+      gStream — Real-time WebRTC streaming for game engines
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

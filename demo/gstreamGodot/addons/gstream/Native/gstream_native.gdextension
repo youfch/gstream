@@ -1,0 +1,7 @@
+[configuration]
+entry_symbol="native_interop_init"
+compatibility_minimum="4.6"
+
+[libraries]
+windows.x86_64.debug="res://addons/gstream/Native/bin/gstream_native.windows.template_debug.x86_64.dll"
+windows.x86_64.release="res://addons/gstream/Native/bin/gstream_native.windows.template_release.x86_64.dll"

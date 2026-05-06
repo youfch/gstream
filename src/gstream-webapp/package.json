@@ -1,0 +1,31 @@
+{
+  "name": "gstream-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node ./build/index.js",
+    "dev": "ts-node ./src/index.ts",
+    "lint": "eslint src/**/*.ts"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "cors": "^2.8.5",
+    "debug": "^4.4.0",
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/debug": "^4.1.12",
+    "@types/express": "^5.0.0",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.13.0",
+    "@types/ws": "^8.5.14",
+    "@types/uuid": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}

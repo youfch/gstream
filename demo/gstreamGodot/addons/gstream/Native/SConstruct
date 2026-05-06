@@ -1,0 +1,132 @@
+"""
+SCons build script for gstream_native GDExtension.
+
+Cross-platform: Windows, Linux, macOS
+
+Usage:
+  uvx scons target=template_release platform=windows
+  uvx scons target=template_debug   platform=windows
+  uvx scons target=template_release platform=linux
+  uvx scons target=template_debug   platform=linux
+  uvx scons target=template_release platform=macos
+  uvx scons target=template_debug   platform=macos
+"""
+
+import os
+import platform as _platform
+from SCons.Script import ARGUMENTS, Default, Environment
+
+# ── Configuration ─────────────────────────────────────────────────────────
+
+opts = ARGUMENTS
+target = opts.get("target", "template_debug")
+platform = opts.get("platform", "windows")
+
+godot_cpp_path = os.path.join(os.getcwd(), "godot-cpp")
+if "GODOT_CPP_PATH" in os.environ:
+    godot_cpp_path = os.environ["GODOT_CPP_PATH"]
+
+# ── Platform detection ────────────────────────────────────────────────────
+
+def platform_suffix():
+    if platform == "windows":
+        return "windows"
+    elif platform == "linux":
+        return "linux"
+    elif platform == "macos":
+        return "macos"
+    return "windows"
+
+def arch_suffix():
+    # Simple arch detection: x86_64 or arm64
+    if platform == "macos":
+        return "universal"  # macOS universal by default on Apple Silicon
+    return "x86_64"
+
+def lib_suffix():
+    if platform == "windows":
+        return ".dll"
+    elif platform == "linux":
+        return ".so"
+    elif platform == "macos":
+        return ".dylib"
+    return ".dll"
+
+# ── Environment ───────────────────────────────────────────────────────────
+
+if platform == "windows":
+    CXX = "cl"
+elif platform == "macos":
+    CXX = "clang++"
+else:
+    CXX = "g++"
+
+env = Environment(
+    ENV=os.environ,
+    tools=["default"],
+    CXX=CXX,
+)
+
+# Compiler flags
+if platform == "windows":
+    env.Append(CPPDEFINES=["TYPED_METHOD_BIND", "NOMINMAX"])
+    env.Append(CXXFLAGS=[
+        "/std:c++17",
+        "/O2" if "release" in target else "/Od",
+        "/DNDEBUG" if "release" in target else "",
+        "/EHsc",
+        "/MT",  # Static runtime (matches godot-cpp)
+    ])
+elif platform == "macos":
+    env.Append(CPPDEFINES=["TYPED_METHOD_BIND"])
+    env.Append(CXXFLAGS=[
+        "-std=c++17",
+        "-O3" if "release" in target else "-g",
+        "-fPIC",
+        "-fvisibility=hidden",
+        "-mmacosx-version-min=10.15",
+    ])
+    env.Append(LINKFLAGS=["-mmacosx-version-min=10.15"])
+else:  # linux
+    env.Append(CPPDEFINES=["TYPED_METHOD_BIND"])
+    env.Append(CXXFLAGS=[
+        "-std=c++17",
+        "-O3" if "release" in target else "-g",
+        "-fPIC",
+        "-fvisibility=hidden",
+    ])
+
+# ── godot-cpp includes ───────────────────────────────────────────────────
+
+if os.path.isdir(godot_cpp_path):
+    env.Append(CPPPATH=[
+        godot_cpp_path,
+        os.path.join(godot_cpp_path, "include"),
+        os.path.join(godot_cpp_path, "gen", "include"),
+        os.path.join(godot_cpp_path, "gdextension"),
+    ])
+
+    # Link against pre-built godot-cpp library
+    lib_dir = os.path.join(godot_cpp_path, "bin")
+    if os.path.isdir(lib_dir):
+        pfx = platform_suffix()
+        arch = arch_suffix()
+        lib_name = f"libgodot-cpp.{pfx}.{target}.{arch}"
+        env.Append(LIBPATH=[lib_dir])
+        env.Append(LIBS=[lib_name])
+
+# ── Our extension source ─────────────────────────────────────────────────
+
+our_sources = [
+    "gstream_native.cpp",
+]
+
+# ── Output ───────────────────────────────────────────────────────────────
+
+pfx = platform_suffix()
+arch = arch_suffix()
+suffix = f".{pfx}.{target}.{arch}{lib_suffix()}"
+env.Replace(SHLIBSUFFIX=suffix)
+
+lib = env.SharedLibrary(target="bin/gstream_native", source=our_sources)
+Default(lib)

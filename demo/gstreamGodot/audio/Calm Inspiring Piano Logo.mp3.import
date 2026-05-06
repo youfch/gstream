@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d1bvndouj3t7g"
+path="res://.godot/imported/Calm Inspiring Piano Logo.mp3-c30d419f989215351822188994c99c29.mp3str"
+
+[deps]
+
+source_file="res://audio/Calm Inspiring Piano Logo.mp3"
+dest_files=["res://.godot/imported/Calm Inspiring Piano Logo.mp3-c30d419f989215351822188994c99c29.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0.0",
+	"FriendlyName": "gStream UE",
+	"Description": "Real-time video streaming via WebRTC. Captures UE viewport, encodes with FFmpeg (NVENC/QSV/VAAPI/VideoToolbox/libx264), and streams to browsers with millisecond latency.",
+	"Category": "Rendering",
+	"CreatedBy": "gStream",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Plugins": [
+		{ "Name": "EnhancedInput", "Enabled": true }
+	],
+	"Modules": [
+		{
+			"Name": "gStreamPlugin",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit"
+		}
+	]
+}

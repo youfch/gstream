@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# GDExtension build artifacts
+addons/gstream/Native/bin/
+addons/gstream/Native/*.obj
+addons/gstream/Native/*.lib
+addons/gstream/Native/*.exp
+addons/gstream/Native/*.sconsign.dblite
+addons/gstream/Native/godot-cpp/
+addons/gstream/Native/extension_api.json
+addons/gstream/Native/gdextension_interface.h
+

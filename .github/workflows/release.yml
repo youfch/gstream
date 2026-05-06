@@ -1,0 +1,145 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  GODOT_VERSION: '4.6'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      # ── Build GDExtension (Release, Native AOT) ──────────────────────
+      - name: Publish GDExtension
+        run: dotnet publish src/gStream.GDExtension/gStream.GDExtension.csproj -r win-x64 -c Release
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+      # ── Package 1: GDE only ──────────────────────────────────────────
+      - name: Package GDE
+        shell: pwsh
+        run: |
+          $publishDir = "src/gStream.GDExtension/bin/Release/net10.0/win-x64/publish"
+          $gdeDir = "staging/gde"
+
+          New-Item -ItemType Directory -Force -Path $gdeDir | Out-Null
+
+          # GDExtension descriptor
+          Copy-Item "demo/gstreamGdedemo/addons/gstream/gstream.gdextension" $gdeDir
+
+          # Main DLL + FFmpeg runtime DLLs (exclude pdb for release)
+          Get-ChildItem "$publishDir/*.dll" | Copy-Item -Destination $gdeDir
+
+          # List contents for verification
+          Write-Host "=== GDE package contents ==="
+          Get-ChildItem $gdeDir | Format-Table Name, Length
+
+      - name: Upload GDE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gde-win-x64
+          path: staging/gde/
+
+      # ── Package 2: Demo project ──────────────────────────────────────
+      - name: Package Demo
+        shell: pwsh
+        run: |
+          $publishDir = "src/gStream.GDExtension/bin/Release/net10.0/win-x64/publish"
+          $demoDir = "staging/demo/gstreamGdedemo"
+
+          # Copy entire demo project
+          Copy-Item -Recurse "demo/gstreamGdedemo" $demoDir
+
+          # Remove .godot cache if present
+          if (Test-Path "$demoDir/.godot") { Remove-Item -Recurse -Force "$demoDir/.godot" }
+
+          # Remove .uid files (editor-specific)
+          Get-ChildItem -Recurse -Filter "*.uid" -Path $demoDir | Remove-Item -Force
+
+          # Remove .gitignore from addon dir (we want DLLs in the release package)
+          if (Test-Path "$demoDir/addons/gstream/.gitignore") {
+            Remove-Item -Force "$demoDir/addons/gstream/.gitignore"
+          }
+
+          # Copy build artifacts into demo's addon directory
+          Get-ChildItem "$publishDir/*.dll" | Copy-Item -Destination "$demoDir/addons/gstream/"
+
+          # List contents for verification
+          Write-Host "=== Demo package contents ==="
+          Get-ChildItem -Recurse $demoDir | Format-Table FullName, Length
+
+      - name: Upload Demo artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-win-x64
+          path: staging/demo/
+
+      # ── Create GitHub Release ────────────────────────────────────────
+      - name: Create Release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag.TrimStart('v')
+
+          # Create zip archives
+          Compress-Archive -Path "staging/gde/*" -DestinationPath "gstream-${version}-gde-win-x64.zip" -Force
+          Compress-Archive -Path "staging/demo/*" -DestinationPath "gstream-${version}-demo-win-x64.zip" -Force
+
+          # Generate release notes
+          $body = @"
+          ## gStream v${version}
+
+          ### Downloads
+
+          | Package | Description |
+          |---------|-------------|
+          | ``gstream-${version}-gde-win-x64.zip`` | GDExtension plugin only — copy ``addons/gstream/`` into your Godot project |
+          | ``gstream-${version}-demo-win-x64.zip`` | Complete demo project — open with Godot 4.6+ (.NET) |
+
+          ### Quick Start (GDE)
+
+          1. Extract ``gstream-${version}-gde-win-x64.zip``
+          2. Copy ``addons/gstream/`` folder into your Godot project
+          3. Enable the plugin in Project → Project Settings → Plugins
+          4. Add a ``StreamServer`` node to your scene
+
+          ### Quick Start (Demo)
+
+          1. Extract ``gstream-${version}-demo-win-x64.zip``
+          2. Open the project with Godot 4.6+ (standard edition works — no .NET SDK needed)
+          3. Run the scene
+
+          ### Requirements
+
+          - Godot 4.6+
+          - Windows 10+ (x64)
+          - GPU with hardware encoder (NVIDIA NVENC / Intel QSV / AMD AMF recommended)
+          - Signaling server (``src/gstream-webapp``) for WebRTC streaming
+          "@
+
+          # Create release and upload assets
+          gh release create $tag `
+            "gstream-${version}-gde-win-x64.zip" `
+            "gstream-${version}-demo-win-x64.zip" `
+            --title "gStream v${version}" `
+            --notes "$body"

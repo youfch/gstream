@@ -1,0 +1,22 @@
+<Project Sdk="Godot.NET.Sdk/4.6.1">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\gStream.Core\gStream.Core.csproj" />
+  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="FFmpeg.GPL" Version="20260408.1.0" GeneratePathProperty="true" />
+		<PackageReference Include="FFmpeg.AutoGen" Version="8.0.0.1" />
+	</ItemGroup>
+	<!-- Copy FFmpeg native libraries — Windows only (Linux/macOS use system FFmpeg) -->
+	<ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+		<None Include="$(PkgFFmpeg_GPL)\runtimes\win-x64\native\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+		<None Include="$(PkgFFmpeg_GPL)\build\native\bin\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+	</ItemGroup>
+</Project>

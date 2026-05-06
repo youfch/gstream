@@ -1,0 +1,13 @@
+[configuration]
+
+entry_symbol = "gstream_library_init"
+compatibility_minimum = 4.1
+
+[libraries]
+
+windows.x86_64.debug = "res://addons/gstream/gStream.GDExtension.dll"
+windows.x86_64.release = "res://addons/gstream/gStream.GDExtension.dll"
+linux.x86_64.debug = "res://addons/gstream/libgStream.GDExtension.so"
+linux.x86_64.release = "res://addons/gstream/libgStream.GDExtension.so"
+macos.debug = "res://addons/gstream/libgStream.GDExtension.dylib"
+macos.release = "res://addons/gstream/libgStream.GDExtension.dylib"

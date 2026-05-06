@@ -1,0 +1,153 @@
+/* Bidirectional page styles */
+
+div#select, div#resolutionSelect {
+  margin: var(--gs-space-md);
+}
+
+div#select label,
+div#resolutionSelect label,
+div#resolutionInput label {
+  color: var(--gs-text-muted);
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+div#select select,
+div#resolutionSelect select {
+  margin-right: 1rem;
+}
+
+div#resolutionInput {
+  margin: 0.75rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+div#resolutionInput input {
+  width: 100px;
+}
+
+button {
+  margin: 0 0.75rem 0.5rem 0;
+  vertical-align: top;
+  min-width: 120px;
+}
+
+div#buttons {
+  border-top: 1px solid var(--gs-border);
+  border-bottom: 1px solid var(--gs-border);
+  margin: var(--gs-space-md) 0;
+  padding: var(--gs-space-md) 0;
+}
+
+div#local {
+  margin: 0 var(--gs-space-md) 0 0;
+}
+
+div#preview {
+  border-bottom: 1px solid var(--gs-border);
+  margin: 0 0 var(--gs-space-md);
+  padding: 0 0 var(--gs-space-md);
+}
+
+div#preview>div {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(50% - 1rem);
+}
+
+div#preview h2 {
+  font-size: 0.9rem;
+  color: var(--gs-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+div#localVideoStats,
+div#remoteVideoStats {
+  font-size: 0.75rem;
+  color: var(--gs-text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  padding-top: 0.5rem;
+}
+
+textarea {
+  color: var(--gs-text);
+  font-size: 0.85rem;
+  font-weight: 400;
+  width: calc(25% - 10px);
+  min-width: 120px;
+  height: 2em;
+  line-height: 1.4;
+  vertical-align: middle;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+video {
+  height: 200px;
+  background: var(--gs-bg-deep);
+  border-radius: var(--gs-radius-md);
+  border: 1px solid var(--gs-border);
+}
+
+@media screen and (max-width: 768px) {
+  div#preview>div {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  div#preview>div:last-child {
+    margin-bottom: 0;
+  }
+
+  textarea {
+    width: 100%;
+    min-width: unset;
+  }
+
+  video {
+    height: 160px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Stack labels above selects on mobile */
+  div#select, div#resolutionSelect {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  div#select label,
+  div#resolutionSelect label,
+  div#resolutionInput label {
+    font-size: 0.8rem;
+  }
+
+  div#select select,
+  div#resolutionSelect select {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  div#resolutionInput {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  div#resolutionInput input {
+    width: 100%;
+  }
+
+  /* Smaller buttons on mobile */
+  button {
+    min-width: unset;
+    font-size: 0.7rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  video {
+    height: 120px;
+  }
+}

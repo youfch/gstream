@@ -1,0 +1,127 @@
+/* Receiver / Multiplay shared player styles */
+
+body {
+  margin: 0;
+  background: var(--gs-bg-deep);
+}
+
+#player {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border-radius: var(--gs-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--gs-border);
+  /* Cinematic gradient overlay */
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(0, 212, 255, 0.04) 0%, transparent 60%),
+    linear-gradient(180deg, #0e0e18 0%, #0a0a0f 100%);
+}
+
+#playButton {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  max-width: unset;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  background: rgba(0, 212, 255, 0.1);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  transition: all 0.3s ease;
+  padding: 0;
+  object-fit: contain;
+}
+
+#playButton:hover {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: var(--gs-accent);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.25);
+  transform: scale(1.05);
+}
+
+#Video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--gs-radius-lg);
+}
+
+#fullscreenButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  z-index: 20;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#fullscreenButton:hover {
+  opacity: 1;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.box span {
+  color: var(--gs-text-muted);
+  font-size: 0.875rem;
+}
+
+/* Fullscreen: player fills entire viewport */
+#player:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  border-radius: 0 !important;
+  border: none !important;
+  aspect-ratio: unset !important;
+}
+
+#player:fullscreen #Video {
+  border-radius: 0 !important;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  #playButton {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* On mobile: player fills width, no fixed aspect ratio to maximize screen usage */
+  #player {
+    aspect-ratio: unset;
+    width: 100%;
+    min-height: 40vh;
+  }
+
+  /* Hide lock mouse checkbox on mobile (no mouse cursor) */
+  .box:has(#lockMouseCheck) {
+    display: none;
+  }
+
+  /* Stats message more compact on mobile */
+  #message {
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+}

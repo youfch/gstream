@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0f'/%3E%3Cpolygon points='12,6 26,16 12,26' fill='%2300d4ff'/%3E%3C/svg%3E" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <title>gStream — Bidirectional</title>
+</head>
+
+<body>
+  <div id="container">
+    <h1>
+      <a href="../index.html" style="color:var(--gs-text-dim);font-size:0.7rem;vertical-align:middle;margin-right:8px;text-decoration:none" data-i18n="back">← Back</a>
+      <span data-i18n="card.bidirectional.title">Bidirectional</span>
+    </h1>
+
+    <div id="warning" hidden=true></div>
+
+    <div id="select">
+      <label for="videoSource" data-i18n="video.source">Video source: </label>
+      <select id="videoSource" autocomplete="off"></select>
+      <label for="audioSource" data-i18n="audio.source">Audio source: </label>
+      <select id="audioSource" autocomplete="off"></select>
+    </div>
+
+    <div id="resolutionSelect">
+      <label for="videoResolution" data-i18n="video.resolution">Video resolution: </label><select id="videoResolution" autocomplete="off"></select>
+    </div>
+    <div id="resolutionInput">
+      <label for="cameraWidth" data-i18n="camera.width">Camera width:</label><input id="cameraWidth" type="number" min="0" max="4096" autocomplete="off" disabled>
+      <label for="cameraHeight" data-i18n="camera.height">Camera height:</label><input id="cameraHeight" type="number" min="0" max="4096" autocomplete="off" disabled>
+    </div>
+
+    <div id="buttons">
+      <button type="button" id="startVideoButton" autocomplete="off" data-i18n="start.video">Start Video</button>
+      <button type="button" id="setUpButton" autocomplete="off" disabled data-i18n="set.up">Set Up</button>
+      <button type="button" id="hangUpButton"  autocomplete="off" disabled data-i18n="hang.up">Hang Up</button>
+    </div>
+
+    <div id="preview">
+      <div id="local">
+        <h2 data-i18n="local">Local</h2>
+        <video id="localVideo" playsinline autoplay muted=true></video>
+        <div id="localVideoStats"></div>
+      </div>
+      <div id="remote">
+        <h2 data-i18n="remote">Remote</h2>
+        <video id="remoteVideo" playsinline autoplay></video>
+        <div id="remoteVideoStats"></div>
+      </div>
+    </div>
+
+    <div class="box">
+      <span data-i18n="connection.id">Connection ID:</span>
+      <textarea id="textForConnectionId"></textarea>
+    </div>
+    <div class="box gs-codec-desktop">
+      <span data-i18n="codec.preferences">Codec preferences:</span>
+      <select id="codecPreferences" autocomplete="off" disabled>
+        <option selected value="" data-i18n="codec.default">Default</option>
+      </select>
+    </div>
+
+    <div class="box gs-codec-mobile">
+      <div class="gs-codec-btn-group" id="codecBtnGroup"></div>
+    </div>
+
+    <div id="message"></div>
+  </div>
+
+  <script type="text/javascript" src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="https://unpkg.com/event-target@latest/min.js"></script>
+  <script src="https://unpkg.com/resize-observer-polyfill@1.5.0/dist/ResizeObserver.global.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+</body>
+
+</html>

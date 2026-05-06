@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PublishAot>true</PublishAot>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>gStream.GDExtension</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Godot.Bindings">
+      <HintPath>Dll\Godot.Bindings.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\gStream.Core\gStream.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FFmpeg.GPL" Version="20260408.1.0" GeneratePathProperty="true" />
+    <PackageReference Include="FFmpeg.AutoGen" Version="8.0.0.1" />
+  </ItemGroup>
+
+  <!-- Copy FFmpeg native libraries — platform specific -->
+  <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
+    <None Include="$(PkgFFmpeg_GPL)\runtimes\win-x64\native\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+    <None Include="$(PkgFFmpeg_GPL)\build\native\bin\*.dll" CopyToOutputDirectory="PreserveNewest" Link="%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- Post-publish: copy native libs + debug symbols to demo project -->
+  <Target Name="CopyToDemo" AfterTargets="Publish">
+    <PropertyGroup>
+      <DemoLibPath>..\..\demo\gstreamGdedemo\addons\gstream\</DemoLibPath>
+    </PropertyGroup>
+    <ItemGroup>
+      <DemoFiles Include="$(PublishDir)*.dll" />
+      <DemoFiles Include="$(PublishDir)*.so" />
+      <DemoFiles Include="$(PublishDir)*.dylib" />
+      <DemoFiles Include="$(PublishDir)*.pdb" />
+    </ItemGroup>
+    <MakeDir Directories="$(DemoLibPath)" />
+    <Copy SourceFiles="@(DemoFiles)" DestinationFolder="$(DemoLibPath)" />
+    <Message Importance="high" Text="Copied @(DemoFiles->Count()) files to $(DemoLibPath)" />
+  </Target>
+
+</Project>
