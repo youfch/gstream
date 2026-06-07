@@ -1,8 +1,31 @@
-# gStream
+# <img src="img/gstream-icon.png" width="36" height="36" align="top"> gStream
+
+[English](#english) | [中文](#中文)
+
+---
+
+<a name="english"></a>
+## English
+
+High-performance real-time video streaming solution — encode Godot game frames and stream them to browsers via WebRTC. Supports multiple hardware encoders (NVENC / QSV / AMF / VAAPI) and software encoders (SVT-AV1 / libvpx-vp9) for low-latency, high-quality browser-side real-time display.
+
+### Features
+
+- 🎮 **Godot Native Integration** — Runs as a Godot plugin with viewport capture
+- 📺 **WebRTC Streaming** — Millisecond-level latency in browsers, with keyboard/mouse/gamepad input relay
+- 🚀 **Multi-Encoder** — Auto-detects GPU and selects the best encoder (NVIDIA NVENC > Intel QSV > AMD AMF > VAAPI), with fine-grained Profile/Level variants
+- 🧩 **Modular Architecture** — Clean separation: Godot plugin layer / C# core library / FFmpeg encoding / WebRTC transport
+- 📦 **Native AOT Export** — Core library compiles to native DLL/SO via AOT, directly callable from C++ engines (UE5, etc.) via C API with zero .NET runtime dependency
+- 📱 **Cross-Platform** — Windows / Linux / macOS
+
+---
+
+<a name="中文"></a>
+## 中文
 
 高性能实时视频流推送解决方案，将 Godot 游戏画面编码并通过 WebRTC 推送到浏览器端。支持多种硬件编码器（NVENC/QSV/AMF/VAAPI）和软件编码器（SVT-AV1/libvpx-vp9），实现低延迟、高画质的浏览器端实时画面展示。
 
-## 特性
+### 特性
 
 - 🎮 **Godot 原生集成** — 以 Godot 插件形式运行，支持 viewport 画面捕捉
 - 📺 **WebRTC 实时推流** — 浏览器端毫秒级延迟观看，支持键盘/鼠标/手柄输入回传
@@ -10,6 +33,8 @@
 - 🧩 **模块化架构** — Godot 插件层 / C# 核心库 / FFmpeg 编码层 / WebRTC 传输层清晰分离
 - 📦 **Native AOT 导出** — 核心库可 AOT 编译为原生 DLL/SO，通过 C API 被 UE5 等 C++ 引擎直接调用，零 .NET 运行时依赖
 - 📱 **多平台** — Windows / Linux / macOS 支持
+
+---
 
 ## 编解码器支持
 
