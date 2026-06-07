@@ -7,58 +7,55 @@ on:
 
 env:
   DOTNET_VERSION: '10.0.x'
-  GODOT_VERSION: '4.6'
+  NODE_VERSION: '22'
 
 permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  # ═══════════════════════════════════════════════════════════════
+  # GDExtension (Windows x64, Native AOT)
+  # ═══════════════════════════════════════════════════════════════
+  build-gde:
     runs-on: windows-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # ── Build GDExtension (Release, Native AOT) ──────────────────────
       - name: Publish GDExtension
-        run: dotnet publish src/gStream.GDExtension/gStream.GDExtension.csproj -r win-x64 -c Release
+        run: dotnet publish src/gStream.GDExtension/gStream.GDExtension.csproj -c Release -r win-x64 --self-contained
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
 
-      # ── Package 1: GDE only ──────────────────────────────────────────
+      # ── Package: GDE only ──────────────────────────────────────
       - name: Package GDE
         shell: pwsh
         run: |
           $publishDir = "src/gStream.GDExtension/bin/Release/net10.0/win-x64/publish"
-          $gdeDir = "staging/gde"
-
+          $gdeDir = "staging/gde/addons/gstream"
           New-Item -ItemType Directory -Force -Path $gdeDir | Out-Null
 
-          # GDExtension descriptor
-          Copy-Item "demo/gstreamGdedemo/addons/gstream/gstream.gdextension" $gdeDir
+          # Remove PDB debug symbols — not needed at runtime
+          Get-ChildItem "$publishDir/*.pdb" | Remove-Item -Force
 
-          # Main DLL + FFmpeg runtime DLLs (exclude pdb for release)
+          # GDExtension descriptor + all DLLs → addons/gstream/
+          Copy-Item "demo/gstreamGdedemo/addons/gstream/gstream.gdextension" $gdeDir
           Get-ChildItem "$publishDir/*.dll" | Copy-Item -Destination $gdeDir
 
-          # List contents for verification
-          Write-Host "=== GDE package contents ==="
+          Write-Host "=== GDE package ==="
           Get-ChildItem $gdeDir | Format-Table Name, Length
 
-      - name: Upload GDE artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: gde-win-x64
           path: staging/gde/
 
-      # ── Package 2: Demo project ──────────────────────────────────────
+      # ── Package: Demo project ──────────────────────────────────
       - name: Package Demo
         shell: pwsh
         run: |
@@ -79,67 +76,121 @@ jobs:
             Remove-Item -Force "$demoDir/addons/gstream/.gitignore"
           }
 
-          # Copy build artifacts into demo's addon directory
+          # Copy build artifacts into demo's addon directory (DLLs only, no PDBs)
           Get-ChildItem "$publishDir/*.dll" | Copy-Item -Destination "$demoDir/addons/gstream/"
 
-          # List contents for verification
-          Write-Host "=== Demo package contents ==="
+          # Clean up any stale PDBs from CopyToDemo target
+          Get-ChildItem -Recurse -Filter "*.pdb" -Path $demoDir -ErrorAction SilentlyContinue | Remove-Item -Force
+
+          Write-Host "=== Demo package ==="
           Get-ChildItem -Recurse $demoDir | Format-Table FullName, Length
 
-      - name: Upload Demo artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: demo-win-x64
           path: staging/demo/
 
-      # ── Create GitHub Release ────────────────────────────────────────
+  # ═══════════════════════════════════════════════════════════════
+  # WebApp — signaling server + web client
+  # ═══════════════════════════════════════════════════════════════
+  build-webapp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: src/gstream-webapp/package-lock.json
+
+      - name: Build
+        working-directory: src/gstream-webapp
+        run: |
+          npm ci
+          npm run build
+
+      - name: Package
+        run: |
+          mkdir -p staging/webapp
+          cp -r src/gstream-webapp/build      staging/webapp/
+          cp -r src/gstream-webapp/client     staging/webapp/
+          cp src/gstream-webapp/package.json  staging/webapp/
+          cd staging/webapp
+          npm ci --omit=dev
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webapp
+          path: staging/webapp/
+
+  # ═══════════════════════════════════════════════════════════════
+  # GitHub Release
+  # ═══════════════════════════════════════════════════════════════
+  create-release:
+    needs: [build-gde, build-webapp]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: '*'
+          path: staging/
+
       - name: Create Release
-        shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag = "${{ github.ref_name }}"
-          $version = $tag.TrimStart('v')
+          tag="${{ github.ref_name }}"
+          version="${tag#v}"
 
-          # Create zip archives
-          Compress-Archive -Path "staging/gde/*" -DestinationPath "gstream-${version}-gde-win-x64.zip" -Force
-          Compress-Archive -Path "staging/demo/*" -DestinationPath "gstream-${version}-demo-win-x64.zip" -Force
+          cd staging
 
-          # Generate release notes
-          $body = @"
+          zip -r "gstream-${version}-gde-win-x64.zip"  gde-win-x64/
+          zip -r "gstream-${version}-demo-win-x64.zip" demo-win-x64/
+          zip -r "gstream-${version}-webapp.zip"       webapp/
+
+          cat > /tmp/notes.md << ENDNOTES
           ## gStream v${version}
 
           ### Downloads
 
           | Package | Description |
           |---------|-------------|
-          | ``gstream-${version}-gde-win-x64.zip`` | GDExtension plugin only — copy ``addons/gstream/`` into your Godot project |
-          | ``gstream-${version}-demo-win-x64.zip`` | Complete demo project — open with Godot 4.6+ (.NET) |
+          | gstream-${version}-gde-win-x64.zip | GDExtension plugin — copy into \`addons/gstream/\` |
+          | gstream-${version}-demo-win-x64.zip | Complete demo project — open with Godot 4.6+ |
+          | gstream-${version}-webapp.zip | Signaling server + web client |
 
           ### Quick Start (GDE)
 
-          1. Extract ``gstream-${version}-gde-win-x64.zip``
-          2. Copy ``addons/gstream/`` folder into your Godot project
+          1. Extract gstream-${version}-gde-win-x64.zip
+          2. Copy all files into your Godot project's \`addons/gstream/\`
           3. Enable the plugin in Project → Project Settings → Plugins
-          4. Add a ``StreamServer`` node to your scene
+          4. Add a \`StreamServer\` node to your scene
+          5. Start the signaling server (see WebApp below)
 
           ### Quick Start (Demo)
 
-          1. Extract ``gstream-${version}-demo-win-x64.zip``
-          2. Open the project with Godot 4.6+ (standard edition works — no .NET SDK needed)
+          1. Extract gstream-${version}-demo-win-x64.zip
+          2. Open \`project.godot\` with Godot 4.6+ (standard edition works — no .NET SDK needed)
           3. Run the scene
+
+          ### Quick Start (WebApp)
+
+          1. Extract gstream-${version}-webapp.zip
+          2. Run \`npm start\` (requires Node.js 18+)
+          3. Open http://localhost:80 in browser
 
           ### Requirements
 
-          - Godot 4.6+
+          - Godot 4.6+ (standard edition for GDE demo)
           - Windows 10+ (x64)
           - GPU with hardware encoder (NVIDIA NVENC / Intel QSV / AMD AMF recommended)
-          - Signaling server (``src/gstream-webapp``) for WebRTC streaming
-          "@
+          - Node.js 18+ (for webapp)
+          ENDNOTES
 
-          # Create release and upload assets
-          gh release create $tag `
-            "gstream-${version}-gde-win-x64.zip" `
-            "gstream-${version}-demo-win-x64.zip" `
-            --title "gStream v${version}" `
-            --notes "$body"
+          gh release create "$tag" \
+            "gstream-${version}-gde-win-x64.zip" \
+            "gstream-${version}-demo-win-x64.zip" \
+            "gstream-${version}-webapp.zip" \
+            --title "gStream v${version}" \
+            --notes-file /tmp/notes.md

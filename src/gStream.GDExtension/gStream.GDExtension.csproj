@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <PackageReference Include="FFmpeg.GPL" Version="20260408.1.0" GeneratePathProperty="true" />
-    <PackageReference Include="FFmpeg.AutoGen" Version="8.0.0.1" />
+    <PackageReference Include="FFmpeg.AutoGen" Version="8.1.0" />
   </ItemGroup>
 
   <!-- Copy FFmpeg native libraries — platform specific -->

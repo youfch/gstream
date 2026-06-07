@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.5.11626.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gStream_Godot", "gStream_Godot.csproj", "{A7B96204-1ED1-4500-9940-CA31FB21046A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gStream.Core", "..\..\src\gStream.Core\gStream.Core.csproj", "{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gstream-godot", "gstream-godot.csproj", "{659365D3-388F-4C9D-68E9-46BCED6120C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +13,18 @@ Global
 		ExportRelease|Any CPU = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
-		{A7B96204-1ED1-4500-9940-CA31FB21046A}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{B3C4D5E6-7F8A-9B0C-1D2E-3F4A5B6C7D8E}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{659365D3-388F-4C9D-68E9-46BCED6120C3}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
