@@ -113,9 +113,10 @@ jobs:
       - name: Package
         run: |
           mkdir -p staging/webapp
-          cp -r src/gstream-webapp/build      staging/webapp/
-          cp -r src/gstream-webapp/client     staging/webapp/
-          cp src/gstream-webapp/package.json  staging/webapp/
+          cp -r src/gstream-webapp/build             staging/webapp/
+          cp -r src/gstream-webapp/client            staging/webapp/
+          cp src/gstream-webapp/package.json         staging/webapp/
+          cp src/gstream-webapp/package-lock.json    staging/webapp/
           cd staging/webapp
           npm ci --omit=dev
 
