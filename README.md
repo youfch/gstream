@@ -1,10 +1,10 @@
-# <img src="img/gstream-icon.png" width="36" height="36" align="top"> gStream
+# <img src="https://raw.githubusercontent.com/youfch/gstream/main/img/gstream-icon.png" width="36" height="36" align="top"> gStream
 
 [中文文档](README_CN.md)
 
 High-performance real-time video streaming for Godot — encode game frames and stream them to browsers via WebRTC with hardware-accelerated encoding.
 
-![Screenshot](img/1.png)
+![Screenshot](https://raw.githubusercontent.com/youfch/gstream/main/img/1.png)
 
 ## Features
 

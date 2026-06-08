@@ -1,4 +1,4 @@
-# <img src="img/gstream-icon.png" width="36" height="36" align="top"> gStream
+# <img src="https://raw.githubusercontent.com/youfch/gstream/main/img/gstream-icon.png" width="36" height="36" align="top"> gStream
 
 [English](README.md)
 
@@ -15,7 +15,7 @@
 
 ---
 
-![gStream Screenshot](img/1.png)
+![gStream Screenshot](https://raw.githubusercontent.com/youfch/gstream/main/img/1.png)
 
 ## 编解码器支持
 
