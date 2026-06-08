@@ -491,4 +491,4 @@ streamServer.IceServers = new string[] { "stun:stun.l.google.com:19302", "turn:y
 
 ## License
 
-（根据实际情况填写）
+[MIT](LICENSE)
