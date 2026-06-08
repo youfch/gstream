@@ -36,6 +36,8 @@ High-performance real-time video streaming solution — encode Godot game frames
 
 ---
 
+![gStream Screenshot](img/1.png)
+
 ## 编解码器支持
 
 gStream 支持 **H264、H265(HEVC)、AV1、VP9** 四种视频编解码器族，每种提供详细的 Profile/Level SDP 变体供选择。在 `Auto` 模式下，系统通过 SDP 协商自动选择浏览器支持的最佳编解码器。
