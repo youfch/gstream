@@ -19,3 +19,27 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Third-Party Components
+
+This project distributes or links against the following third-party components:
+
+| Component | License | Source |
+|-----------|---------|--------|
+| FFmpeg (GPL build) | GPL v2.1+ | https://ffmpeg.org |
+| FFmpeg.AutoGen | MIT | https://github.com/Ruslan-B/FFmpeg.AutoGen |
+| SIPSorcery | BSD-3-Clause | https://github.com/sipsorcery-org/sipsorcery |
+
+The binary distribution of gStream includes GPL-licensed FFmpeg components.
+Under the terms of the GPL, the combined work is subject to the GNU General
+Public License when distributed in binary form. Recipients are entitled to
+receive the complete corresponding source code under the terms of the GPL.
+
+H.264/H.265 Codec Notice
+
+This product includes H.264 and H.265 encoding functionality via FFmpeg.
+Commercial use of H.264/H.265 may require a patent license from MPEG LA.
+It is the user`s responsibility to ensure compliance with applicable patent
+laws in their jurisdiction.
