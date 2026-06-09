@@ -7,7 +7,3 @@ compatibility_minimum = 4.1
 
 windows.x86_64.debug = "res://addons/gstream/gStream.GDExtension.dll"
 windows.x86_64.release = "res://addons/gstream/gStream.GDExtension.dll"
-linux.x86_64.debug = "res://addons/gstream/libgStream.GDExtension.so"
-linux.x86_64.release = "res://addons/gstream/libgStream.GDExtension.so"
-macos.debug = "res://addons/gstream/libgStream.GDExtension.dylib"
-macos.release = "res://addons/gstream/libgStream.GDExtension.dylib"
