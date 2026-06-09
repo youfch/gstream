@@ -488,6 +488,7 @@ streamServer.IceServers = new string[] { "stun:stun.l.google.com:19302", "turn:y
 ## 已知问题
 
 1. **H265 WebRTC 解码** — Chrome 实验性 flag 实现不完整，可能出现花屏/黑屏，Firefox 完全不支持 H265 WebRTC，建议优先使用 AV1 或 H264
+2. **平台支持** — 因作者没有 macOS 和 Linux 设备，目前仅提供 Windows x64 的预编译 GDExtension。其他平台需手动编译，欢迎贡献
 
 ## License
 
