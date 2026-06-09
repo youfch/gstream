@@ -12,13 +12,15 @@ High-performance real-time video streaming for Godot — encode game frames and 
 - 📺 **WebRTC Streaming** — Millisecond latency with keyboard/mouse/gamepad input relay
 - 🚀 **Multi-Codec** — H264 / H265 / AV1 / VP9 with auto GPU encoder selection (NVENC / QSV / AMF / VAAPI)
 - 📦 **Native AOT** — Core library compiles to native DLL/SO, callable from C++ engines (UE5, etc.) via C API
-- 📱 **Cross-Platform** — Windows / Linux / macOS
+- 📱 **Cross-Platform** — Windows 10+ (prebuilt) | Linux / macOS (build from source)
 
 ## Quick Start
 
 ### Option 1: GDExtension (Recommended)
 
 Download the latest `gstream-v*-gde-win-x64.zip` from [Releases](https://github.com/youfch/gstream/releases), extract into your Godot project, and enable the plugin.
+
+> **Note:** Prebuilt GDExtension is currently Windows-only. The author does not have access to macOS or Linux hardware to provide precompiled binaries for those platforms. Linux/macOS users can [build from source](#build-from-source).
 
 ### Option 2: Godot .NET Plugin
 
