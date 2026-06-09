@@ -135,7 +135,7 @@ Complete API reference → [README_CN.md § 导出的 C API](README_CN.md#导出
 ## Known Issues
 
 - **H265 WebRTC** — Chrome requires experimental flag, Firefox not supported. Use AV1 or H264 instead.
-- **Platform Support** — The author does not have macOS or Linux machines, so precompiled GDExtension binaries are only provided for Windows x64. Other platforms require manual compilation. Contributions welcome.
+- **Platform Support** — The author does not have macOS or Linux machines, so precompiled GDExtension binaries are only provided for Windows x64. Other platforms require manual compilation. Cross-platform users can use the regular Godot .NET plugin instead — reference the source code directly for native cross-platform support.
 
 ## License
 
